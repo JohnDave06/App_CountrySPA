@@ -1,0 +1,118 @@
+<div class="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
+  <div class="card w-full max-w-md bg-base-100 shadow-2xl">
+    <!-- Header -->
+    <div class="card-body">
+      <div class="text-center mb-6">
+        <div class="text-4xl mb-2">🏞️</div>
+        <h2 class="text-2xl font-bold text-primary">Country SPA</h2>
+        <p class="text-gray-600">Inicia sesión en tu cuenta</p>
+      </div>
+
+      <!-- Login Form -->
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="space-y-4">
+        <!-- Email -->
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Email</span>
+          </label>
+          <input 
+            type="email" 
+            placeholder="tu@email.com"
+            class="input input-bordered"
+            formControlName="email"
+            [class.input-error]="isFieldInvalid('email')">
+          <label class="label" *ngIf="isFieldInvalid('email')">
+            <span class="label-text-alt text-error">
+              {{ getFieldError('email') }}
+            </span>
+          </label>
+        </div>
+
+        <!-- Password -->
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Contraseña</span>
+          </label>
+          <div class="relative">
+            <input 
+              [type]="showPassword ? 'text' : 'password'"
+              placeholder="Tu contraseña"
+              class="input input-bordered w-full"
+              formControlName="password"
+              [class.input-error]="isFieldInvalid('password')">
+            <button 
+              type="button"
+              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+              (click)="togglePassword()">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path *ngIf="!showPassword" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path *ngIf="!showPassword" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                <path *ngIf="showPassword" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
+              </svg>
+            </button>
+          </div>
+          <label class="label" *ngIf="isFieldInvalid('password')">
+            <span class="label-text-alt text-error">
+              {{ getFieldError('password') }}
+            </span>
+          </label>
+        </div>
+
+        <!-- Remember Me -->
+        <div class="form-control">
+          <label class="label cursor-pointer justify-start">
+            <input 
+              type="checkbox" 
+              class="checkbox checkbox-primary mr-3"
+              formControlName="rememberMe">
+            <span class="label-text">Recordarme</span>
+          </label>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-control mt-6">
+          <button 
+            type="submit"
+            class="btn btn-primary"
+            [class.loading]="isLoading"
+            [disabled]="loginForm.invalid || isLoading">
+            <span *ngIf="!isLoading">Iniciar Sesión</span>
+            <span *ngIf="isLoading">Iniciando...</span>
+          </button>
+        </div>
+
+        <!-- Error Message -->
+        <div class="alert alert-error mt-4" *ngIf="errorMessage">
+          <svg class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>{{ errorMessage }}</span>
+        </div>
+      </form>
+
+      <!-- Footer Links -->
+      <div class="divider">O</div>
+      
+      <div class="text-center space-y-2">
+        <a href="#" class="link link-primary text-sm" (click)="onForgotPassword()">
+          ¿Olvidaste tu contraseña?
+        </a>
+        <div class="text-sm">
+          ¿No tienes cuenta? 
+          <a href="#" class="link link-primary" (click)="onRegister()">
+            Regístrate aquí
+          </a>
+        </div>
+      </div>
+
+      <!-- Demo Credentials -->
+      <div class="bg-base-200 p-4 rounded-lg mt-4">
+        <h4 class="font-semibold text-sm mb-2">Credenciales de Demo:</h4>
+        <div class="text-xs space-y-1">
+          <div><strong>Admin:</strong> admin@countryspa.com / admin123</div>
+          <div><strong>Usuario:</strong> user@countryspa.com / user123</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

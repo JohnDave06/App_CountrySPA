@@ -1,0 +1,253 @@
+<div class="min-h-screen bg-base-200 p-4">
+  <div class="container mx-auto">
+    
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-primary mb-4">🗄️ HTTP Caching System Demo</h1>
+      <p class="text-lg text-gray-600 text-center">Sistema avanzado de caché HTTP con múltiples estrategias, TTL y invalidación inteligente</p>
+    </div>
+
+    <!-- Cache Statistics -->
+    <div class="card bg-base-100 shadow-lg mb-8">
+      <div class="card-body">
+        <h2 class="card-title text-2xl mb-4">📊 Cache Statistics</h2>
+        
+        <div *ngIf="cacheStats$ | async as stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div class="stat bg-blue-50 rounded-lg p-4">
+            <div class="stat-title text-blue-600">Cache Entries</div>
+            <div class="stat-value text-blue-800">{{ stats.totalEntries }}</div>
+          </div>
+          
+          <div class="stat bg-green-50 rounded-lg p-4">
+            <div class="stat-title text-green-600">Hit Rate</div>
+            <div class="stat-value text-green-800">{{ stats.hitRate.toFixed(1) }}%</div>
+          </div>
+          
+          <div class="stat bg-purple-50 rounded-lg p-4">
+            <div class="stat-title text-purple-600">Total Size</div>
+            <div class="stat-value text-purple-800">{{ formatBytes(stats.totalSize) }}</div>
+          </div>
+          
+          <div class="stat bg-orange-50 rounded-lg p-4">
+            <div class="stat-title text-orange-600">Total Requests</div>
+            <div class="stat-value text-orange-800">{{ stats.totalRequests }}</div>
+          </div>
+        </div>
+
+        <!-- Cache Size Info -->
+        <div class="flex justify-between items-center mb-4">
+          <div class="text-sm text-gray-600">
+            Cache Size: {{ getCacheSize().size }} / {{ getCacheSize().maxSize }} 
+            ({{ getCacheSize().entries }} entries)
+          </div>
+          <div class="flex gap-2">
+            <button (click)="toggleAutoRefresh()" 
+                    [class]="autoRefreshEnabled ? 'btn btn-success btn-sm' : 'btn btn-outline btn-sm'">
+              {{ autoRefreshEnabled ? 'Auto Refresh ON' : 'Auto Refresh OFF' }}
+            </button>
+            <button (click)="updateCacheConfig()" class="btn btn-outline btn-sm">
+              Configure Cache
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cache Strategy Demos -->
+    <div class="card bg-base-100 shadow-lg mb-8">
+      <div class="card-body">
+        <h2 class="card-title text-2xl mb-4">🔧 Cache Strategy Demonstrations</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
+          <div *ngFor="let demo of cacheDemos; trackBy: trackByIndex" 
+               class="border border-gray-300 rounded-lg p-4">
+            
+            <div class="flex justify-between items-start mb-3">
+              <h4 class="font-bold text-lg">{{ demo.name }}</h4>
+              <span class="badge text-xs px-2 py-1 rounded-full" 
+                    [class]="getStrategyColor(demo.strategy)">
+                {{ demo.strategy }}
+              </span>
+            </div>
+            
+            <p class="text-sm text-gray-600 mb-3">{{ demo.description }}</p>
+            
+            <div class="text-xs text-gray-500 mb-3">
+              <div>Endpoint: <code class="bg-gray-100 px-1 rounded">{{ demo.endpoint }}</code></div>
+              <div *ngIf="demo.ttl">TTL: {{ (demo.ttl / 1000 / 60).toFixed(1) }} minutes</div>
+              <div *ngIf="demo.tags && demo.tags.length > 0">
+                Tags: {{ demo.tags.join(', ') }}
+              </div>
+            </div>
+            
+            <button (click)="executeDemo(demo)" 
+                    class="btn btn-primary btn-sm w-full mb-2">
+              Execute Demo
+            </button>
+            
+            <div *ngIf="demo.lastExecuted" class="text-xs text-gray-600">
+              <div>Last executed: {{ formatTimestamp(demo.lastExecuted) }}</div>
+              <div>Response time: {{ demo.responseTime }}ms</div>
+              <div class="flex items-center">
+                <span>Source: </span>
+                <span *ngIf="demo.fromCache" class="text-green-600 ml-1">💾 Cache</span>
+                <span *ngIf="!demo.fromCache" class="text-blue-600 ml-1">🌐 Network</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-center">
+          <button (click)="executeAllDemos()" class="btn btn-accent">
+            Execute All Demos
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cache Management -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      
+      <!-- Cache Entries -->
+      <div class="card bg-base-100 shadow-lg">
+        <div class="card-body">
+          <h3 class="card-title mb-4">🗃️ Cache Entries</h3>
+          
+          <div class="max-h-96 overflow-y-auto">
+            <div *ngFor="let entry of cacheEntries; trackBy: trackByUrl" 
+                 class="border-b border-gray-200 py-3 last:border-b-0">
+              
+              <div class="flex justify-between items-start mb-2">
+                <div class="text-sm font-medium truncate flex-1">
+                  {{ entry.url }}
+                </div>
+                <div class="ml-2">
+                  <span *ngIf="isExpired(entry)" class="badge badge-error badge-sm">Expired</span>
+                  <span *ngIf="!isExpired(entry)" class="badge badge-success badge-sm">
+                    {{ getTimeUntilExpiration(entry) }}
+                  </span>
+                </div>
+              </div>
+              
+              <div class="text-xs text-gray-500 grid grid-cols-2 gap-2">
+                <div>Size: {{ formatBytes(entry.size) }}</div>
+                <div>Hits: {{ entry.accessCount }}</div>
+                <div>Created: {{ formatTimestamp(entry.timestamp) }}</div>
+                <div>Last Access: {{ formatTimestamp(entry.lastAccessed) }}</div>
+              </div>
+              
+              <div *ngIf="entry.tags.length > 0" class="flex flex-wrap gap-1 mt-2">
+                <span *ngFor="let tag of entry.tags" 
+                      class="badge badge-outline badge-xs">
+                  {{ tag }}
+                </span>
+              </div>
+            </div>
+            
+            <div *ngIf="cacheEntries.length === 0" class="text-center py-8 text-gray-500">
+              No cache entries found
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Requests Log -->
+      <div class="card bg-base-100 shadow-lg">
+        <div class="card-body">
+          <h3 class="card-title mb-4">📝 Requests Log</h3>
+          
+          <div class="max-h-96 overflow-y-auto">
+            <div *ngFor="let request of requestsLog; trackBy: trackByIndex" 
+                 class="border-b border-gray-200 py-2 last:border-b-0">
+              
+              <div class="flex justify-between items-center mb-1">
+                <div class="text-sm font-medium">{{ request.demo }}</div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs" [class]="getStrategyColor(request.strategy)">
+                    {{ request.strategy }}
+                  </span>
+                  <span *ngIf="request.fromCache" class="text-green-600 text-xs">💾</span>
+                  <span *ngIf="!request.fromCache" class="text-blue-600 text-xs">🌐</span>
+                </div>
+              </div>
+              
+              <div class="text-xs text-gray-500 flex justify-between">
+                <span>{{ formatTimestamp(request.timestamp) }}</span>
+                <span>{{ request.responseTime }}ms</span>
+                <span *ngIf="request.size">{{ formatBytes(request.size) }}</span>
+              </div>
+            </div>
+            
+            <div *ngIf="requestsLog.length === 0" class="text-center py-8 text-gray-500">
+              No requests logged yet
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Cache Management Actions -->
+    <div class="card bg-base-100 shadow-lg">
+      <div class="card-body">
+        <h2 class="card-title text-2xl mb-4">🛠️ Cache Management</h2>
+        
+        <div class="flex flex-wrap gap-4 mb-6">
+          <button (click)="invalidateByPattern()" class="btn btn-warning">
+            Invalidate by Pattern
+          </button>
+          <button (click)="invalidateByTags()" class="btn btn-warning">
+            Invalidate by Tags
+          </button>
+          <button (click)="clearCache()" class="btn btn-error">
+            Clear All Cache
+          </button>
+        </div>
+
+        <!-- Strategy Information -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="border border-blue-300 rounded-lg p-4 bg-blue-50">
+            <h4 class="font-bold text-blue-800 mb-2">Cache First</h4>
+            <p class="text-sm text-blue-700">
+              Sirve desde cache si está disponible, va a la red como fallback. 
+              Ideal para datos que no cambian frecuentemente.
+            </p>
+          </div>
+          
+          <div class="border border-green-300 rounded-lg p-4 bg-green-50">
+            <h4 class="font-bold text-green-800 mb-2">Network First</h4>
+            <p class="text-sm text-green-700">
+              Intenta la red primero, usa cache si falla. 
+              Perfecto para datos que deben estar actualizados.
+            </p>
+          </div>
+          
+          <div class="border border-yellow-300 rounded-lg p-4 bg-yellow-50">
+            <h4 class="font-bold text-yellow-800 mb-2">Stale While Revalidate</h4>
+            <p class="text-sm text-yellow-700">
+              Sirve cache inmediatamente y actualiza en segundo plano. 
+              Balance perfecto entre velocidad y frescura.
+            </p>
+          </div>
+          
+          <div class="border border-purple-300 rounded-lg p-4 bg-purple-50">
+            <h4 class="font-bold text-purple-800 mb-2">Cache Only</h4>
+            <p class="text-sm text-purple-700">
+              Solo sirve desde cache, nunca va a la red. 
+              Útil para datos estáticos o modo offline.
+            </p>
+          </div>
+          
+          <div class="border border-red-300 rounded-lg p-4 bg-red-50">
+            <h4 class="font-bold text-red-800 mb-2">Network Only</h4>
+            <p class="text-sm text-red-700">
+              Siempre va a la red, no usa cache. 
+              Para datos que requieren máxima frescura.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

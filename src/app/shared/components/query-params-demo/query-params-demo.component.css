@@ -1,0 +1,54 @@
+/* Query Params Demo Component Styles */
+.query-params-demo-container { 
+  padding: 1rem; 
+  min-height: 100vh; 
+  background-color: #f8fafc; 
+}
+.mockup-code { 
+  max-height: 200px; 
+  overflow-y: auto; 
+}
+.badge.cursor-pointer:hover { 
+  transform: scale(1.05); 
+}
+.card.compact .card-body { 
+  padding: 0.75rem; 
+}
+.alert-sm { 
+  padding: 0.5rem; 
+  font-size: 0.75rem; 
+}
+.table-sm th, .table-sm td { 
+  padding: 0.5rem; 
+}
+.range.range-sm { 
+  height: 1rem; 
+}
+.transition-all { 
+  transition: all 0.2s ease; 
+}
+.break-all { 
+  word-break: break-all; 
+}
+@media (max-width: 768px) { 
+  .grid.grid-cols-3 { 
+    grid-template-columns: repeat(1, minmax(0, 1fr)); 
+  } 
+  .grid.grid-cols-2 { 
+    grid-template-columns: repeat(1, minmax(0, 1fr)); 
+  } 
+}
+/* Scrollbar styling */
+.overflow-y-auto::-webkit-scrollbar { 
+  width: 6px; 
+}
+.overflow-y-auto::-webkit-scrollbar-track { 
+  background: #f1f5f9; 
+}
+.overflow-y-auto::-webkit-scrollbar-thumb { 
+  background: #cbd5e1; 
+  border-radius: 3px; 
+}
+.overflow-y-auto::-webkit-scrollbar-thumb:hover { 
+  background: #94a3b8; 
+}

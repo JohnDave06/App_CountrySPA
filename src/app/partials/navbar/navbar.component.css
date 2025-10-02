@@ -1,0 +1,24 @@
+.navbar {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.navbar a.active {
+  background-color: hsl(var(--p));
+  color: hsl(var(--pc));
+  border-radius: 0.5rem;
+}
+
+.dropdown-content {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.input:focus {
+  border-color: hsl(var(--p));
+  box-shadow: 0 0 0 2px hsl(var(--p) / 0.2);
+}
+
+@media (max-width: 768px) {
+  .navbar-center {
+    display: none;
+  }
+}

@@ -1,0 +1,99 @@
+<div class="fade-in">
+  <!-- Hero Section -->
+  <div class="hero min-h-screen bg-gradient-to-br from-green-100 to-blue-100">
+    <div class="hero-content text-center px-4">
+      <div class="max-w-4xl">
+        <div class="text-4xl sm:text-5xl lg:text-6xl mb-4">
+          <svg class="w-16 h-16 sm:w-20 sm:h-20 mx-auto" fill="gray" viewBox="0 0 24 24">
+            <path d="M12 2L3 7v10c0 5.55 3.84 10 9 11 5.16-1 9-5.45 9-11V7l-9-5z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </div>
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary mb-6">
+          Bienvenido al Country SPA
+        </h1>
+        <p class="text-base sm:text-lg lg:text-xl mb-8 text-gray-600 max-w-2xl mx-auto px-4 text-justify sm:text-center">
+          Descubre un oasis de tranquilidad en nuestro balneario campestre. 
+          Disfruta de servicios de spa de clase mundial, cabañas acogedoras y 
+          actividades recreativas en un entorno natural incomparable.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center px-4">
+          <button 
+            class="btn btn-primary btn-sm sm:btn-md lg:btn-lg shadow-lg hover:shadow-xl"
+            (click)="onReserveNow()">
+            Reservar Ahora
+          </button>
+          <button 
+            class="btn btn-secondary btn-sm sm:btn-md lg:btn-lg shadow-lg hover:shadow-xl text-white"
+            (click)="onExploreServices()">
+            Explorar Servicios
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Featured Services -->
+  <div class="container mx-auto px-4 py-8 sm:py-12 lg:py-16">
+    <div class="text-center mb-8 sm:mb-12">
+      <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white-800 mb-4">Nuestros Servicios Destacados</h2>
+      <p class="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto px-4 text-center">
+        Ofrecemos una experiencia completa de relajación y bienestar
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+      <div 
+        *ngFor="let service of featuredServices" 
+        class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow cursor-pointer mx-auto w-full max-w-sm sm:max-w-none"
+        (click)="onServiceClick(service)">
+        <figure class="px-4 sm:px-6 lg:px-10 pt-4 sm:pt-6 lg:pt-10">
+          <div class="text-3xl sm:text-4xl lg:text-5xl">{{ service.icon }}</div>
+        </figure>
+        <div class="card-body items-center text-center p-3 sm:p-4 lg:p-6">
+          <h3 class="card-title text-sm sm:text-base lg:text-lg">{{ service.name }}</h3>
+          <p class="text-gray-600 text-xs sm:text-sm text-center">{{ service.description }}</p>
+          <div class="badge badge-primary badge-outline text-xs">{{ service.category }}</div>
+          <div class="card-actions">
+            <button class="btn btn-primary btn-sm">Ver más</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Section -->
+  <div class="bg-primary text-primary-content py-16">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div class="stat" *ngFor="let stat of stats">
+          <div class="stat-value text-3xl">{{ stat.value }}</div>
+          <div class="stat-title opacity-80">{{ stat.label }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Newsletter -->
+  <div class="bg-base-200 py-8 sm:py-12 lg:py-16">
+    <div class="container mx-auto px-2 sm:px-4 text-center">
+      <h3 class="text-xl sm:text-2xl lg:text-3xl font-bold mb-4">Mantente Informado</h3>
+      <p class="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 px-2 text-center">Recibe ofertas especiales y novedades del Country SPA</p>
+      <div class="max-w-sm sm:max-w-md mx-auto px-2">
+        <div class="flex flex-col sm:flex-row gap-2 sm:gap-0">
+          <input 
+            class="input input-bordered input-sm sm:input-md flex-1 sm:rounded-r-none" 
+            placeholder="Tu email"
+            [(ngModel)]="emailSubscription"
+            type="email">
+          <button 
+            class="btn btn-primary btn-sm sm:btn-md sm:rounded-l-none"
+            (click)="onSubscribe()"
+            [disabled]="!emailSubscription">
+            Suscribirse
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

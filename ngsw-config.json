@@ -1,0 +1,134 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "resources": {
+        "files": [
+          "/favicon.ico",
+          "/index.html",
+          "/manifest.webmanifest",
+          "/*.css",
+          "/*.js"
+        ]
+      }
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/assets/**",
+          "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+        ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "spa-services-api",
+      "urls": [
+        "https://api.countryspa.com/spa-services/**",
+        "https://api.countryspa.com/service-categories/**",
+        "https://jsonplaceholder.typicode.com/posts/**"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 100,
+        "maxAge": "2h",
+        "timeout": "8s"
+      }
+    },
+    {
+      "name": "cabins-api",
+      "urls": [
+        "https://api.countryspa.com/cabins/**",
+        "https://api.countryspa.com/cabins/availability/**"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 50,
+        "maxAge": "1h",
+        "timeout": "6s"
+      }
+    },
+    {
+      "name": "reservations-api",
+      "urls": [
+        "https://api.countryspa.com/reservations/**",
+        "https://api.countryspa.com/cabin-bookings/**",
+        "https://api.countryspa.com/user-bookings/**"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 30,
+        "maxAge": "30m",
+        "timeout": "5s"
+      }
+    },
+    {
+      "name": "reviews-ratings",
+      "urls": [
+        "https://api.countryspa.com/reviews/**",
+        "https://api.countryspa.com/cabin-reviews/**",
+        "https://api.countryspa.com/service-ratings/**"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 200,
+        "maxAge": "4h",
+        "timeout": "10s"
+      }
+    },
+    {
+      "name": "user-data",
+      "urls": [
+        "https://api.countryspa.com/user-profile/**",
+        "https://api.countryspa.com/user-preferences/**",
+        "https://api.countryspa.com/user-favorites/**"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 20,
+        "maxAge": "15m",
+        "timeout": "3s"
+      }
+    },
+    {
+      "name": "static-content",
+      "urls": [
+        "https://api.countryspa.com/content/**",
+        "https://api.countryspa.com/spa-info/**",
+        "https://api.countryspa.com/location-info/**"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 50,
+        "maxAge": "1d",
+        "timeout": "15s"
+      }
+    },
+    {
+      "name": "external-apis",
+      "urls": [
+        "https://jsonplaceholder.typicode.com/**",
+        "https://httpbin.org/**"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 30,
+        "maxAge": "30m",
+        "timeout": "8s"
+      }
+    }
+  ],
+  "navigationUrls": [
+    "/**",
+    "!/**/*.*",
+    "!/**/*__*",
+    "!/**/*__*/**"
+  ]
+}

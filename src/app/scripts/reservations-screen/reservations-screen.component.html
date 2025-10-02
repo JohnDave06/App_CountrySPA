@@ -1,0 +1,373 @@
+<div class="min-h-screen bg-base-200">
+  <!-- Hero Section -->
+  <div class="hero bg-gradient-to-r from-secondary to-accent text-secondary-content py-6 sm:py-8 lg:py-12">
+    <div class="hero-content text-center px-4">
+      <div class="max-w-4xl">
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">Gestión de Reservas</h1>
+        <p class="text-sm sm:text-base lg:text-lg mb-4 sm:mb-6 text-center">Administra tus reservas de servicios de spa y cabañas en un solo lugar</p>
+        <button 
+          class="btn btn-primary btn-sm sm:btn-md lg:btn-lg w-full sm:w-auto" 
+          (click)="showNewReservationForm = !showNewReservationForm">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          <span class="text-sm sm:text-base">Nueva Reserva</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
+    <!-- New Reservation Form -->
+    <div *ngIf="showNewReservationForm" class="mb-4 sm:mb-8">
+      <div class="card bg-base-100 shadow-lg">
+        <div class="card-body p-3 sm:p-6">
+          <div class="flex justify-between items-center mb-4 sm:mb-6">
+            <h2 class="card-title text-lg sm:text-xl lg:text-2xl">Nueva Reserva</h2>
+            <button 
+              class="btn btn-ghost btn-circle btn-sm sm:btn-md" 
+              (click)="showNewReservationForm = false">
+              <svg class="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+
+          <form [formGroup]="newReservationForm" (ngSubmit)="onSubmitReservation()">
+            <!-- Reservation Type -->
+            <div class="form-control mb-3 sm:mb-4">
+              <label class="label">
+                <span class="label-text font-semibold text-sm sm:text-base">Tipo de Reserva</span>
+              </label>
+              <div class="flex flex-col sm:flex-row gap-2 sm:gap-4">
+                <label class="label cursor-pointer justify-start">
+                  <input 
+                    type="radio" 
+                    value="service" 
+                    formControlName="type"
+                    (change)="onReservationTypeChange('service')"
+                    class="radio radio-primary radio-sm sm:radio-md" 
+                    checked>
+                  <span class="label-text ml-2 text-sm sm:text-base">Servicio de Spa</span>
+                </label>
+                <label class="label cursor-pointer">
+                  <input 
+                    type="radio" 
+                    value="cabin" 
+                    formControlName="type"
+                    (change)="onReservationTypeChange('cabin')"
+                    class="radio radio-primary">
+                  <span class="label-text ml-2">Cabaña</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <!-- Service Selection -->
+              <div *ngIf="reservationType === 'service'" class="form-control">
+                <label class="label">
+                  <span class="label-text">Servicio</span>
+                </label>
+                <select 
+                  formControlName="serviceId" 
+                  class="select select-bordered"
+                  [class.select-error]="isFieldInvalid('serviceId')">
+                  <option value="">Selecciona un servicio</option>
+                  <option *ngFor="let service of services" [value]="service.id">
+                    {{ service.name }} - ${{ service.price.toLocaleString() }}
+                  </option>
+                </select>
+                <label *ngIf="isFieldInvalid('serviceId')" class="label">
+                  <span class="label-text-alt text-error">{{ getFieldError('serviceId') }}</span>
+                </label>
+              </div>
+
+              <!-- Cabin Selection -->
+              <div *ngIf="reservationType === 'cabin'" class="form-control">
+                <label class="label">
+                  <span class="label-text">Cabaña</span>
+                </label>
+                <select 
+                  formControlName="cabinId" 
+                  class="select select-bordered"
+                  [class.select-error]="isFieldInvalid('cabinId')">
+                  <option value="">Selecciona una cabaña</option>
+                  <option *ngFor="let cabin of cabins" [value]="cabin.id">
+                    {{ cabin.name }} - ${{ cabin.pricePerNight.toLocaleString() }}/noche
+                  </option>
+                </select>
+                <label *ngIf="isFieldInvalid('cabinId')" class="label">
+                  <span class="label-text-alt text-error">{{ getFieldError('cabinId') }}</span>
+                </label>
+              </div>
+
+              <!-- Date -->
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text">Fecha</span>
+                </label>
+                <input 
+                  type="date" 
+                  formControlName="date"
+                  class="input input-bordered"
+                  [class.input-error]="isFieldInvalid('date')"
+                  [min]="getTodayDate()">
+                <label *ngIf="isFieldInvalid('date')" class="label">
+                  <span class="label-text-alt text-error">{{ getFieldError('date') }}</span>
+                </label>
+              </div>
+
+              <!-- Time -->
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text">Hora</span>
+                </label>
+                <input 
+                  type="time" 
+                  formControlName="time"
+                  class="input input-bordered"
+                  [class.input-error]="isFieldInvalid('time')">
+                <label *ngIf="isFieldInvalid('time')" class="label">
+                  <span class="label-text-alt text-error">{{ getFieldError('time') }}</span>
+                </label>
+              </div>
+
+              <!-- Guests -->
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text">Número de Huéspedes</span>
+                </label>
+                <input 
+                  type="number" 
+                  formControlName="guests"
+                  class="input input-bordered"
+                  [class.input-error]="isFieldInvalid('guests')"
+                  min="1" 
+                  max="10">
+                <label *ngIf="isFieldInvalid('guests')" class="label">
+                  <span class="label-text-alt text-error">{{ getFieldError('guests') }}</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="divider">Información de Contacto</div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <!-- Contact Name -->
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text">Nombre Completo</span>
+                </label>
+                <input 
+                  type="text" 
+                  formControlName="contactName"
+                  class="input input-bordered"
+                  [class.input-error]="isFieldInvalid('contactName')"
+                  placeholder="Tu nombre completo">
+                <label *ngIf="isFieldInvalid('contactName')" class="label">
+                  <span class="label-text-alt text-error">{{ getFieldError('contactName') }}</span>
+                </label>
+              </div>
+
+              <!-- Contact Email -->
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text">Email</span>
+                </label>
+                <input 
+                  type="email" 
+                  formControlName="contactEmail"
+                  class="input input-bordered"
+                  [class.input-error]="isFieldInvalid('contactEmail')"
+                  placeholder="tu@email.com">
+                <label *ngIf="isFieldInvalid('contactEmail')" class="label">
+                  <span class="label-text-alt text-error">{{ getFieldError('contactEmail') }}</span>
+                </label>
+              </div>
+
+              <!-- Contact Phone -->
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text">Teléfono</span>
+                </label>
+                <input 
+                  type="tel" 
+                  formControlName="contactPhone"
+                  class="input input-bordered"
+                  [class.input-error]="isFieldInvalid('contactPhone')"
+                  placeholder="+52 xxx xxx xxxx">
+                <label *ngIf="isFieldInvalid('contactPhone')" class="label">
+                  <span class="label-text-alt text-error">{{ getFieldError('contactPhone') }}</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Special Requests -->
+            <div class="form-control mb-6">
+              <label class="label">
+                <span class="label-text">Peticiones Especiales (Opcional)</span>
+              </label>
+              <textarea 
+                formControlName="specialRequests"
+                class="textarea textarea-bordered h-20"
+                placeholder="Alguna petición especial o comentario adicional..."></textarea>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="card-actions justify-end gap-2">
+              <button 
+                type="button" 
+                class="btn btn-ghost" 
+                (click)="showNewReservationForm = false">
+                Cancelar
+              </button>
+              <button 
+                type="submit" 
+                class="btn btn-primary"
+                [class.loading]="loading">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                Crear Reserva
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Existing Reservations -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold mb-4">Mis Reservas</h2>
+      
+      <!-- Loading State -->
+      <div *ngIf="loading" class="flex justify-center items-center py-12">
+        <div class="loading loading-spinner loading-lg text-primary"></div>
+      </div>
+
+      <!-- No Reservations -->
+      <div *ngIf="!loading && reservations.length === 0" class="text-center py-12">
+        <div class="max-w-md mx-auto">
+          <svg class="w-16 h-16 mx-auto text-base-content/40 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+          <h3 class="text-xl font-semibold mb-2">No tienes reservas</h3>
+          <p class="text-base-content/60 mb-4">
+            Crea tu primera reserva para comenzar a disfrutar de nuestros servicios.
+          </p>
+          <button 
+            class="btn btn-primary" 
+            (click)="showNewReservationForm = true">
+            Crear Primera Reserva
+          </button>
+        </div>
+      </div>
+
+      <!-- Reservations List -->
+      <div *ngIf="!loading && reservations.length > 0" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div *ngFor="let reservation of reservations" class="card bg-base-100 shadow-md">
+          <div class="card-body">
+            <!-- Reservation Header -->
+            <div class="flex justify-between items-start mb-3">
+              <div>
+                <h3 class="card-title">{{ reservation.serviceName }}</h3>
+                <div class="flex items-center gap-2 text-sm text-base-content/70">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                  </svg>
+                  {{ reservation.serviceType === 'spa' ? 'Servicio de Spa' : 'Cabaña' }}
+                </div>
+              </div>
+              <div class="badge" [class]="getStatusColor(reservation.status)">
+                {{ getStatusText(reservation.status) }}
+              </div>
+            </div>
+
+            <!-- Reservation Details -->
+            <div class="space-y-2 mb-4">
+              <div class="flex items-center gap-2 text-sm">
+                <svg class="w-4 h-4 text-base-content/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <span>{{ reservation.date | date:'fullDate' }}</span>
+              </div>
+              
+              <div class="flex items-center gap-2 text-sm">
+                <svg class="w-4 h-4 text-base-content/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>{{ reservation.time }} ({{ reservation.duration }} min)</span>
+              </div>
+              
+              <div class="flex items-center gap-2 text-sm">
+                <svg class="w-4 h-4 text-base-content/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                <span>{{ reservation.guests }} {{ reservation.guests === 1 ? 'huésped' : 'huéspedes' }}</span>
+              </div>
+              
+              <div class="flex items-center gap-2 text-sm">
+                <svg class="w-4 h-4 text-base-content/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                </svg>
+                <span class="font-semibold">${{ reservation.totalPrice.toLocaleString() }}</span>
+              </div>
+            </div>
+
+            <!-- Special Requests -->
+            <div *ngIf="reservation.specialRequests" class="mb-4">
+              <div class="text-sm text-base-content/70 mb-1">Peticiones especiales:</div>
+              <div class="text-sm bg-base-200 p-2 rounded">
+                {{ reservation.specialRequests }}
+              </div>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="text-xs text-base-content/60 mb-4">
+              <div>{{ reservation.contactEmail }}</div>
+              <div>{{ reservation.contactPhone }}</div>
+            </div>
+
+            <!-- Actions -->
+            <div class="card-actions justify-end">
+              <button 
+                *ngIf="reservation.status === 'pending' || reservation.status === 'confirmed'"
+                class="btn btn-error btn-sm"
+                (click)="cancelReservation(reservation.id)">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Help Section -->
+    <div class="mt-16">
+      <div class="card bg-gradient-to-r from-primary to-secondary text-primary-content">
+        <div class="card-body text-center">
+          <h2 class="card-title justify-center text-2xl mb-4">¿Necesitas ayuda con tus reservas?</h2>
+          <p class="mb-6">Nuestro equipo de atención al cliente está aquí para ayudarte.</p>
+          <div class="card-actions justify-center">
+            <button class="btn btn-accent">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+              </svg>
+              Llamar Soporte
+            </button>
+            <button class="btn btn-outline btn-accent">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+              </svg>
+              Chat en Vivo
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+/* About Screen Styles */
+.about-hero {
+  background: linear-gradient(135deg, #2d7d32 0%, #4caf50 100%);
+}
+
+.about-section {
+  scroll-margin-top: 80px;
+}
+
+.mission-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.mission-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.team-member-card {
+  transition: all 0.3s ease;
+}
+
+.team-member-card:hover {
+  transform: scale(1.05);
+}
+
+.stats-counter {
+  animation: fadeInUp 0.8s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bg-gradient-green {
+  background: linear-gradient(135deg, #c8e6c9 0%, #e8f5e8 100%);
+}
+
+.text-primary-green {
+  color: #2d7d32;
+}
+
+.border-primary-green {
+  border-color: #4caf50;
+}

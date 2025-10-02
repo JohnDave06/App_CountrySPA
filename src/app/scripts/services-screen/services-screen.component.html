@@ -1,0 +1,109 @@
+<div class="min-h-screen bg-base-200">
+  <!-- Hero Section -->
+  <div class="hero bg-gradient-to-r from-primary to-secondary text-primary-content py-8 sm:py-12 lg:py-16">
+    <div class="hero-content text-center px-4">
+      <div class="max-w-4xl">
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">Nuestros Servicios de Spa</h1>
+        <p class="text-base sm:text-lg lg:text-xl mb-8 px-4">Descubre una experiencia única de relajación y bienestar con nuestros tratamientos especializados</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
+    <!-- Filter Component (Communication via @Output events) -->
+    <app-service-filter
+      [categories]="categories"
+      [priceRange]="priceRange"
+      [debounceTime]="300"
+      [showAdvancedFilters]="true"
+      (filterChange)="onFilterChange($event)"
+      (searchTermChange)="onSearchTermChange($event)"
+      (categoryChange)="onCategoryChange($event)"
+      (priceRangeChange)="onPriceRangeChange($event)">
+    </app-service-filter>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex justify-center items-center py-16">
+      <div class="loading loading-spinner loading-lg text-primary"></div>
+      <span class="ml-4 text-lg">Cargando servicios...</span>
+    </div>
+
+    <!-- Services Grid -->
+    <div *ngIf="!loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+      <app-service-card
+        *ngFor="let service of filteredServices; trackBy: trackByServiceId"
+        [service]="service"
+        [showBookButton]="true"
+        [showFavoriteButton]="true"
+        [showRating]="true"
+        [cardSize]="'medium'"
+        [isFavorite]="isFavorite(service.id)"
+        (serviceAction)="onServiceAction($event)"
+        (favoriteToggle)="onFavoriteToggle($event)"
+        (cardClick)="onCardClick($event)">
+      </app-service-card>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && filteredServices.length === 0" class="text-center py-16">
+      <div class="text-6xl mb-4">🔍</div>
+      <h3 class="text-2xl font-bold text-gray-600 mb-4">No se encontraron servicios</h3>
+      <p class="text-gray-500 mb-8 text-center">Intenta ajustar los filtros o buscar con otros términos</p>
+      <button class="btn btn-primary" onclick="window.location.reload()">
+        Mostrar todos los servicios
+      </button>
+    </div>
+
+    <!-- Stats Section -->
+    <div *ngIf="!loading && filteredServices.length > 0" class="mt-12 bg-primary text-primary-content rounded-lg p-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+        <div>
+          <div class="text-3xl font-bold">{{ filteredServices.length }}</div>
+          <div class="opacity-80">Servicios Disponibles</div>
+        </div>
+        <div>
+          <div class="text-3xl font-bold">{{ categories.length }}</div>
+          <div class="opacity-80">Categorías</div>
+        </div>
+        <div>
+          <div class="text-3xl font-bold">{{ favorites.size }}</div>
+          <div class="opacity-80">Favoritos</div>
+        </div>
+        <div>
+          <div class="text-3xl font-bold">4.8★</div>
+          <div class="opacity-80">Calificación Promedio</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="mt-12">
+      <h2 class="text-3xl font-bold text-center mb-8">¿Por qué elegir nuestros servicios?</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="card bg-base-100 shadow-lg">
+          <div class="card-body text-center">
+            <div class="text-4xl mb-4">👩‍⚕️</div>
+            <h3 class="card-title justify-center">Profesionales Certificados</h3>
+            <p class="text-justify">Nuestro equipo cuenta con terapeutas altamente capacitados y certificados en técnicas especializadas.</p>
+          </div>
+        </div>
+        
+        <div class="card bg-base-100 shadow-lg">
+          <div class="card-body text-center">
+            <div class="text-4xl mb-4">🌿</div>
+            <h3 class="card-title justify-center">Productos Naturales</h3>
+            <p class="text-justify">Utilizamos únicamente productos orgánicos y naturales para garantizar el mejor cuidado de tu piel.</p>
+          </div>
+        </div>
+        
+        <div class="card bg-base-100 shadow-lg">
+          <div class="card-body text-center">
+            <div class="text-4xl mb-4">🏆</div>
+            <h3 class="card-title justify-center">Experiencia Premium</h3>
+            <p class="text-justify">Cada tratamiento está diseñado para ofrecerte una experiencia única y personalizada.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

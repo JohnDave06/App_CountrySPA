@@ -1,0 +1,305 @@
+<div class="min-h-screen bg-base-200">
+  <!-- Admin Header -->
+  <div class="hero bg-gradient-to-r from-accent to-secondary text-accent-content py-8 sm:py-12">
+    <div class="hero-content text-center px-4">
+      <div class="max-w-4xl">
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">Panel de Administración</h1>
+        <p class="text-base sm:text-lg lg:text-xl mb-6 text-center">Demostraciones Técnicas de Angular Avanzado</p>
+        <div class="badge badge-sm sm:badge-md lg:badge-lg badge-primary">Country SPA - Funcionalidades Implementadas</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
+    <!-- Navigation Tabs -->
+    <div class="tabs tabs-boxed tabs-sm sm:tabs-md lg:tabs-lg justify-center mb-4 sm:mb-8 overflow-x-auto">
+      <a *ngFor="let section of sections"
+         [class]="'tab whitespace-nowrap ' + (currentSection === section.id ? 'tab-active' : '')"
+         (click)="setActiveSection(section.id)">
+        <span class="mr-1 sm:mr-2">{{ section.icon }}</span>
+        <span class="text-xs sm:text-sm lg:text-base">{{ section.name }}</span>
+      </a>
+    </div>
+
+    <!-- Content Sections -->
+    <div class="demo-content">
+      
+      <!-- Overview Section -->
+      <div *ngIf="currentSection === 'overview'" class="fade-in">
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title text-3xl mb-6">
+              <svg class="w-8 h-8 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
+                <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
+              </svg>
+              Vista General del Proyecto
+            </h2>
+            
+            <!-- Project Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+              <div class="stat bg-secondary text-secondary-content rounded-lg">
+                <div class="stat-figure text-3xl">
+                  <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"></path>
+                  </svg>
+                </div>
+                <div class="stat-title text-secondary-content/80">Componentes</div>
+                <div class="stat-value">45+</div>
+                <div class="stat-desc text-secondary-content/60">Incluyendo demos</div>
+              </div>
+              
+              <div class="stat bg-accent text-accent-content rounded-lg">
+                <div class="stat-figure text-3xl">
+                  <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div class="stat-title text-accent-content/80">Servicios</div>
+                <div class="stat-value">12+</div>
+                <div class="stat-desc text-accent-content/60">Funcionalidades core</div>
+              </div>
+              
+              <div class="stat bg-info text-info-content rounded-lg">
+                <div class="stat-figure text-3xl">
+                  <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-2.22l.123.489.804.804A1 1 0 0113 18H7a1 1 0 01-.707-1.707l.804-.804L7.22 15H5a2 2 0 01-2-2V5zm5.771 7H5V5h10v7H8.771z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div class="stat-title text-info-content/80">PWA Ready</div>
+                <div class="stat-value">100%</div>
+                <div class="stat-desc text-info-content/60">Completamente funcional</div>
+              </div>
+            </div>
+
+            <!-- Features Implementation -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div class="card bg-base-200">
+                <div class="card-body">
+                  <h3 class="card-title text-xl mb-4">Características Implementadas</h3>
+                  <ul class="space-y-2">
+                    <li class="flex items-center">
+                      <span class="mr-3 text-success">✅</span>
+                      <span>Comunicación avanzada entre componentes</span>
+                    </li>
+                    <li class="flex items-center">
+                      <span class="mr-3 text-success">✅</span>
+                      <span>Servicios compartidos con estado global</span>
+                    </li>
+                    <li class="flex items-center">
+                      <span class="mr-3 text-success">✅</span>
+                      <span>Angular Signals reactivos</span>
+                    </li>
+                    <li class="flex items-center">
+                      <span class="mr-3 text-success">✅</span>
+                      <span>Sistema completo de interceptores HTTP</span>
+                    </li>
+                    <li class="flex items-center">
+                      <span class="mr-3 text-success">✅</span>
+                      <span>Operadores RxJS avanzados</span>
+                    </li>
+                    <li class="flex items-center">
+                      <span class="mr-3 text-success">✅</span>
+                      <span>Sistema de caché inteligente</span>
+                    </li>
+                    <li class="flex items-center">
+                      <span class="mr-3 text-success">✅</span>
+                      <span>Gestión de query parameters</span>
+                    </li>
+                    <li class="flex items-center">
+                      <span class="mr-3 text-success">✅</span>
+                      <span>Rutas anidadas con guards y resolvers</span>
+                    </li>
+                    <li class="flex items-center">
+                      <span class="mr-3 text-success">✅</span>
+                      <span>PWA completa con offline y notificaciones</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="card bg-base-200">
+                <div class="card-body">
+                  <h3 class="card-title text-xl mb-4">Tecnologías Utilizadas</h3>
+                  <div class="flex flex-wrap gap-2">
+                    <div class="badge badge-primary">Angular 16.2.0</div>
+                    <div class="badge badge-secondary">TypeScript 5.1</div>
+                    <div class="badge badge-accent">RxJS 7.8</div>
+                    <div class="badge badge-info">Tailwind CSS</div>
+                    <div class="badge badge-success">DaisyUI</div>
+                    <div class="badge badge-warning">PWA</div>
+                    <div class="badge badge-error">Service Workers</div>
+                    <div class="badge badge-neutral">Angular Signals</div>
+                    <div class="badge badge-primary">HTTP Interceptors</div>
+                    <div class="badge badge-secondary">Route Guards</div>
+                    <div class="badge badge-accent">Data Resolvers</div>
+                    <div class="badge badge-info">Lazy Loading</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Communication Demo -->
+      <div *ngIf="currentSection === 'communication'" class="fade-in">
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title text-3xl mb-6">
+              <svg class="w-8 h-8 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
+              </svg>
+              Comunicación Entre Componentes
+            </h2>
+            <p class="text-lg mb-6">
+              Demostración de patrones avanzados de comunicación usando @Input/@Output, ViewChild, EventEmitter y servicios.
+            </p>
+            
+            <!-- Filter and Service Cards Demo -->
+            <div class="alert alert-info mb-6">
+              <svg class="stroke-current shrink-0 w-6 h-6" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <div>
+                <h3 class="font-bold">Los componentes de filtro y tarjetas de servicios están en la pantalla principal</h3>
+                <div class="text-sm">Ve a "Servicios" para ver la implementación en vivo de comunicación entre componentes.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shared Services Demo -->
+      <div *ngIf="currentSection === 'services'" class="fade-in">
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title text-3xl mb-6">
+              <svg class="w-8 h-8 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path>
+              </svg>
+              Servicios Compartidos Avanzados
+            </h2>
+            <p class="text-lg mb-6">
+              Sistema de servicios con gestión de estado global, notificaciones reactivas y persistencia de datos.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Angular Signals Demo -->
+      <div *ngIf="currentSection === 'signals'" class="fade-in">
+        <app-signals-demo></app-signals-demo>
+      </div>
+
+      <!-- HTTP Interceptors Demo -->
+      <div *ngIf="currentSection === 'http'" class="fade-in">
+        <app-http-demo></app-http-demo>
+      </div>
+
+      <!-- RxJS Operators Demo -->
+      <div *ngIf="currentSection === 'rxjs'" class="fade-in">
+        <app-rxjs-demo></app-rxjs-demo>
+      </div>
+
+      <!-- Cache System Demo -->
+      <div *ngIf="currentSection === 'cache'" class="fade-in">
+        <app-cache-demo></app-cache-demo>
+      </div>
+
+      <!-- Query Parameters Demo -->
+      <div *ngIf="currentSection === 'query'" class="fade-in">
+        <app-query-params-demo></app-query-params-demo>
+      </div>
+
+      <!-- Nested Routes Demo -->
+      <div *ngIf="currentSection === 'routes'" class="fade-in">
+        <div class="space-y-6">
+          <!-- Navigation Cards -->
+          <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+              <h2 class="card-title text-3xl mb-6">
+                <svg class="w-8 h-8 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd"></path>
+                </svg>
+                Rutas Anidadas y Guards
+              </h2>
+              
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <!-- Service Detail Demo -->
+                <div class="card bg-primary text-primary-content">
+                  <div class="card-body text-center">
+                    <div class="text-3xl mb-2">
+                      <svg class="w-8 h-8 mx-auto" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 01-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 010-2h4a1 1 0 011 1v4a1 1 0 01-2 0V6.414l-2.293 2.293a1 1 0 11-1.414-1.414L13.586 5H12zm-9 7a1 1 0 012 0v1.586l2.293-2.293a1 1 0 111.414 1.414L6.414 15H8a1 1 0 010 2H4a1 1 0 01-1-1v-4zm13-1a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 010-2h1.586l-2.293-2.293a1 1 0 111.414-1.414L15.586 13V12a1 1 0 011-1z" clip-rule="evenodd"></path>
+                      </svg>
+                    </div>
+                    <h3 class="card-title text-lg justify-center">Detalle de Servicio</h3>
+                    <p class="text-sm mb-4 text-center">Rutas anidadas con pestañas</p>
+                    <a routerLink="/services/detail/service-1" 
+                       class="btn btn-sm btn-outline btn-accent">
+                      Ver Ejemplo
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Bookings Demo -->
+                <div class="card bg-secondary text-secondary-content">
+                  <div class="card-body text-center">
+                    <div class="text-3xl mb-2">
+                      <svg class="w-8 h-8 mx-auto" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                      </svg>
+                    </div>
+                    <h3 class="card-title text-lg justify-center">Mis Reservas</h3>
+                    <p class="text-sm mb-4 text-center">Lista de reservas con guards</p>
+                    <a routerLink="/services/bookings" 
+                       class="btn btn-sm btn-outline btn-accent">
+                      Ver Reservas
+                    </a>
+                  </div>
+                </div>
+
+                <!-- User Profile Demo -->
+                <div class="card bg-accent text-accent-content">
+                  <div class="card-body text-center">
+                    <div class="text-3xl mb-2">
+                      <svg class="w-8 h-8 mx-auto" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                      </svg>
+                    </div>
+                    <h3 class="card-title text-lg justify-center">Perfil de Usuario</h3>
+                    <p class="text-sm mb-4 text-center">Pestañas anidadas y resolvers</p>
+                    <a routerLink="/services/user-profile" 
+                       class="btn btn-sm btn-outline btn-primary">
+                      Ver Perfil
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Demo -->
+          <app-nested-routes-demo></app-nested-routes-demo>
+        </div>
+      </div>
+
+      <!-- PWA Features Demo -->
+      <div *ngIf="currentSection === 'pwa'" class="fade-in">
+        <app-pwa-status></app-pwa-status>
+      </div>
+
+      <!-- Offline Functionality Demo -->
+      <div *ngIf="currentSection === 'offline'" class="fade-in">
+        <app-offline-demo></app-offline-demo>
+      </div>
+
+      <!-- Push Notifications Demo -->
+      <div *ngIf="currentSection === 'notifications'" class="fade-in">
+        <app-push-notifications-demo></app-push-notifications-demo>
+      </div>
+
+    </div>
+  </div>
+</div>

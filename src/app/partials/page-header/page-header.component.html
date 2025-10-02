@@ -1,0 +1,19 @@
+<div class="hero min-h-[200px] bg-base-200">
+  <div class="hero-content text-center">
+    <div class="max-w-md">
+      <h1 class="text-5xl font-bold mb-4">{{title}}</h1>
+      <p class="py-6 text-lg" *ngIf="subtitle">{{subtitle}}</p>
+      <div class="breadcrumbs text-sm" *ngIf="breadcrumbs && breadcrumbs.length > 0">
+        <ul>
+          <li *ngFor="let crumb of breadcrumbs; let last = last">
+            <a *ngIf="!last && crumb.route" [routerLink]="crumb.route">{{crumb.label}}</a>
+            <span *ngIf="last || !crumb.route">{{crumb.label}}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="mt-6" *ngIf="showAction">
+        <button class="btn btn-primary" (click)="onAction()">{{actionText}}</button>
+      </div>
+    </div>
+  </div>
+</div>

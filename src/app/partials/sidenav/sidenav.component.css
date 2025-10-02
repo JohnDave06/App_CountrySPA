@@ -1,0 +1,41 @@
+.drawer-side {
+  z-index: 999;
+}
+
+.drawer-overlay {
+  backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.menu li a {
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.menu li a:hover {
+  background-color: hsl(var(--p) / 0.1);
+  color: hsl(var(--p));
+}
+
+.menu li a.active {
+  background-color: hsl(var(--p));
+  color: hsl(var(--pc));
+}
+
+.menu-title span {
+  font-weight: 600;
+  color: hsl(var(--bc) / 0.7);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+aside {
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  aside {
+    width: 280px;
+  }
+}

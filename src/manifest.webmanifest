@@ -1,0 +1,142 @@
+{
+  "name": "Country SPA - Balneario Campestre",
+  "short_name": "Country SPA",
+  "description": "Relájate y disfruta de nuestros servicios de spa y cabañas en un entorno natural único. Reserva tratamientos, gestiona tus citas y disfruta de una experiencia de bienestar completa.",
+  "theme_color": "#16a085",
+  "background_color": "#f8f9fa",
+  "display": "standalone",
+  "orientation": "any",
+  "scope": "./",
+  "start_url": "./?utm_source=pwa&utm_medium=homescreen",
+  "categories": ["lifestyle", "travel", "health", "wellness", "business"],
+  "lang": "es-CO",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "shortcuts": [
+    {
+      "name": "Reservar Servicio",
+      "short_name": "Reservar",
+      "description": "Reserva rápidamente un servicio de spa",
+      "url": "/services?action=quick-book",
+      "icons": [
+        {
+          "src": "assets/icons/shortcut-book.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Mis Reservas",
+      "short_name": "Reservas",
+      "description": "Ver y gestionar mis reservas actuales",
+      "url": "/services/bookings",
+      "icons": [
+        {
+          "src": "assets/icons/shortcut-bookings.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Explorar Cabañas",
+      "short_name": "Cabañas",
+      "description": "Descubre nuestras cabañas disponibles",
+      "url": "/cabins",
+      "icons": [
+        {
+          "src": "assets/icons/shortcut-cabins.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Mi Perfil",
+      "short_name": "Perfil",
+      "description": "Gestionar mi perfil y preferencias",
+      "url": "/services/user-profile",
+      "icons": [
+        {
+          "src": "assets/icons/shortcut-profile.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "assets/screenshots/desktop-home.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Pantalla principal en desktop"
+    },
+    {
+      "src": "assets/screenshots/mobile-services.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Servicios en móvil"
+    }
+  ],
+  "icons": [
+    {
+      "src": "assets/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ]
+}

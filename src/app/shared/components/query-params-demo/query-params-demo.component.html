@@ -1,0 +1,349 @@
+<div class="query-params-demo-container">
+  <!-- Header Section -->
+  <div class="card bg-primary text-primary-content mb-6">
+    <div class="card-body">
+      <h2 class="card-title text-2xl mb-2">
+        <span class="mr-2">🔗</span>
+        Query Parameters & URL Synchronization Demo
+      </h2>
+      <p class="text-base-content/80 text-center">
+        Demonstrating advanced URL parameter handling with deep linking, state persistence, and synchronization.
+      </p>
+      <div class="stats stats-horizontal bg-base-100 text-base-content mt-4">
+        <div class="stat">
+          <div class="stat-title">Updates</div>
+          <div class="stat-value text-primary">{{ updateCount }}</div>
+        </div>
+        <div class="stat">
+          <div class="stat-title">Has Filters</div>
+          <div class="stat-value" [class]="hasFilters ? 'text-success' : 'text-base-content'">
+            {{ hasFilters ? 'Yes' : 'No' }}
+          </div>
+        </div>
+        <div class="stat">
+          <div class="stat-title">URL Length</div>
+          <div class="stat-value text-secondary">{{ currentUrl.length }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Current State Display -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <!-- Current URL -->
+    <div class="card bg-base-100 shadow-lg">
+      <div class="card-body">
+        <h3 class="card-title">Current URL</h3>
+        <div class="mockup-code">
+          <pre class="text-xs"><code>{{ currentUrl || '(no parameters)' }}</code></pre>
+        </div>
+        <div class="card-actions justify-end">
+          <button class="btn btn-sm btn-outline" (click)="copyShareableUrl()">
+            📋 Copy URL
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Summary -->
+    <div class="card bg-base-100 shadow-lg">
+      <div class="card-body">
+        <h3 class="card-title">Active Filters</h3>
+        <div *ngIf="filterSummary.length > 0; else noFilters">
+          <div class="badge badge-primary mb-2" *ngFor="let filter of filterSummary">
+            {{ filter }}
+          </div>
+        </div>
+        <ng-template #noFilters>
+          <p class="text-base-content/60">No active filters</p>
+        </ng-template>
+        <div class="card-actions justify-end">
+          <button class="btn btn-sm btn-warning" 
+                  (click)="clearAllFilters()" 
+                  [disabled]="!hasFilters">
+            🧹 Clear Filters
+          </button>
+          <button class="btn btn-sm btn-error" (click)="resetToDefaults()">
+            🔄 Reset All
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Controls -->
+  <div class="card bg-base-100 shadow-lg mb-6">
+    <div class="card-body">
+      <h3 class="card-title mb-4">Interactive Parameter Controls</h3>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Search -->
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Search Term</span>
+          </label>
+          <input type="text" 
+                 class="input input-bordered" 
+                 [(ngModel)]="searchTerm"
+                 (ngModelChange)="onSearchChange($event)"
+                 placeholder="Enter search term">
+        </div>
+
+        <!-- Category -->
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Category</span>
+          </label>
+          <select class="select select-bordered" 
+                  [(ngModel)]="selectedCategory"
+                  (ngModelChange)="onCategoryChange($event)">
+            <option value="">All Categories</option>
+            <option *ngFor="let category of categories" [value]="category">
+              {{ category }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Price Range -->
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Price Range: ${{ priceMin }} - ${{ priceMax }}</span>
+          </label>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="range" 
+                   class="range range-primary range-sm" 
+                   min="0" max="500"
+                   [(ngModel)]="priceMin"
+                   (change)="onPriceRangeChange()">
+            <input type="range" 
+                   class="range range-primary range-sm" 
+                   min="500" max="1000"
+                   [(ngModel)]="priceMax"
+                   (change)="onPriceRangeChange()">
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Page & Limit</span>
+          </label>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="number" 
+                   class="input input-bordered input-sm" 
+                   min="1"
+                   [(ngModel)]="currentPage"
+                   (ngModelChange)="onPageChange($event)"
+                   placeholder="Page">
+            <select class="select select-bordered select-sm"
+                    [(ngModel)]="pageLimit"
+                    (ngModelChange)="onLimitChange($event)">
+              <option value="6">6 per page</option>
+              <option value="12">12 per page</option>
+              <option value="24">24 per page</option>
+              <option value="48">48 per page</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Sorting -->
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Sort By</span>
+          </label>
+          <div class="grid grid-cols-2 gap-2">
+            <select class="select select-bordered select-sm"
+                    [(ngModel)]="sortBy"
+                    (change)="onSortChange()">
+              <option value="name">Name</option>
+              <option value="price">Price</option>
+              <option value="rating">Rating</option>
+              <option value="duration">Duration</option>
+            </select>
+            <select class="select select-bordered select-sm"
+                    [(ngModel)]="sortOrder"
+                    (change)="onSortChange()">
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Availability & Rating -->
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Filters</span>
+          </label>
+          <div class="grid grid-cols-1 gap-2">
+            <select class="select select-bordered select-sm"
+                    #availabilitySelect
+                    [value]="availabilityFilter === undefined ? '' : availabilityFilter.toString()"
+                    (change)="onAvailabilityChange(availabilitySelect.value)">
+              <option value="">Any Availability</option>
+              <option value="true">Available Only</option>
+              <option value="false">Unavailable Only</option>
+            </select>
+            <select class="select select-bordered select-sm"
+                    #ratingSelect
+                    [value]="ratingFilter || ''"
+                    (change)="onRatingChange(ratingSelect.value ? +ratingSelect.value : undefined)">
+              <option value="">Any Rating</option>
+              <option value="1">1+ Stars</option>
+              <option value="2">2+ Stars</option>
+              <option value="3">3+ Stars</option>
+              <option value="4">4+ Stars</option>
+              <option value="5">5 Stars</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tags -->
+      <div class="form-control mt-4">
+        <label class="label">
+          <span class="label-text">Tags</span>
+        </label>
+        <div class="flex flex-wrap gap-2">
+          <div *ngFor="let tag of tags" 
+               class="badge badge-lg cursor-pointer transition-all"
+               [class]="selectedTags.includes(tag) ? 'badge-primary' : 'badge-outline'"
+               (click)="onTagToggle(tag)">
+            <span>{{ tag }}</span>
+            <span class="ml-1">{{ selectedTags.includes(tag) ? '✓' : '+' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- URL Testing Section -->
+  <div class="card bg-base-100 shadow-lg mb-6">
+    <div class="card-body">
+      <h3 class="card-title mb-4">URL Pattern Testing</h3>
+      
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <!-- Test Configurations -->
+        <div>
+          <h4 class="text-lg font-semibold mb-3">Test Configurations</h4>
+          <div class="space-y-2 max-h-96 overflow-y-auto">
+            <div *ngFor="let config of urlTestConfigs; trackBy: trackByTestName" 
+                 class="card bg-base-200 compact">
+              <div class="card-body">
+                <div class="flex justify-between items-start">
+                  <div class="flex-1">
+                    <h5 class="font-medium">{{ config.name }}</h5>
+                    <p class="text-sm text-base-content/70">{{ config.description }}</p>
+                    <div class="text-xs font-mono mt-1 p-2 bg-base-300 rounded">
+                      {{ config.expectedUrl }}
+                    </div>
+                  </div>
+                  <button class="btn btn-sm btn-primary ml-2" 
+                          (click)="runUrlTest(config)">
+                    Test
+                  </button>
+                </div>
+                
+                <!-- Test Result -->
+                <div *ngIf="testResults[config.name]" class="mt-2">
+                  <div class="alert alert-sm"
+                       [class]="testResults[config.name].success ? 'alert-success' : 'alert-error'">
+                    <span class="text-xs">
+                      {{ testResults[config.name].success ? '✅ Passed' : '❌ Failed' }}
+                      <span *ngIf="testResults[config.name].error">
+                        - {{ testResults[config.name].error }}
+                      </span>
+                    </span>
+                  </div>
+                  <div class="text-xs font-mono mt-1 p-1 bg-base-300 rounded">
+                    Actual: {{ testResults[config.name].actualUrl || '(empty)' }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-4">
+            <button class="btn btn-secondary" (click)="runAllTests()">
+              🧪 Run All Tests
+            </button>
+          </div>
+        </div>
+
+        <!-- URL History -->
+        <div>
+          <h4 class="text-lg font-semibold mb-3">URL History</h4>
+          <div class="space-y-2 max-h-96 overflow-y-auto">
+            <div *ngFor="let entry of urlHistory; trackBy: trackByHistoryIndex" 
+                 class="card bg-base-200 compact">
+              <div class="card-body">
+                <div class="flex justify-between items-start">
+                  <div class="flex-1">
+                    <div class="text-sm font-medium">{{ entry.action }}</div>
+                    <div class="text-xs text-base-content/70">{{ formatDate(entry.timestamp) }}</div>
+                    <div class="text-xs font-mono mt-1 p-1 bg-base-300 rounded break-all">
+                      {{ entry.url }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Current Parameters Display -->
+  <div class="card bg-base-100 shadow-lg">
+    <div class="card-body">
+      <h3 class="card-title mb-4">Current Parameters Object</h3>
+      
+      <div class="mockup-code">
+        <pre class="text-sm"><code>{{ getCurrentParamsAsString() }}</code></pre>
+      </div>
+      
+      <div class="divider">Parameter Details</div>
+      
+      <div class="overflow-x-auto">
+        <table class="table table-zebra table-sm">
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Value</th>
+              <th>Type</th>
+              <th>Default</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let param of ['search', 'category', 'priceMin', 'priceMax', 'page', 'limit', 'sortBy', 'sortOrder', 'tags', 'availability', 'rating']">
+              <td class="font-mono">{{ param }}</td>
+              <td class="font-mono">
+                <span *ngIf="getParamValue(param) !== undefined; else noValue">
+                  {{ getParamValue(param) }}
+                </span>
+                <ng-template #noValue>
+                  <span class="text-base-content/50">-</span>
+                </ng-template>
+              </td>
+              <td class="text-sm">{{ getParamType(param) }}</td>
+              <td class="text-sm text-base-content/70">
+                <span [ngSwitch]="param">
+                  <span *ngSwitchCase="'search'">''"</span>
+                  <span *ngSwitchCase="'category'">''"</span>
+                  <span *ngSwitchCase="'priceMin'">0</span>
+                  <span *ngSwitchCase="'priceMax'">1000</span>
+                  <span *ngSwitchCase="'page'">1</span>
+                  <span *ngSwitchCase="'limit'">12</span>
+                  <span *ngSwitchCase="'sortBy'">'name'</span>
+                  <span *ngSwitchCase="'sortOrder'">'asc'</span>
+                  <span *ngSwitchCase="'tags'">[]</span>
+                  <span *ngSwitchDefault>undefined</span>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,203 @@
+<div class="min-h-screen bg-base-200">
+  <!-- Hero Section -->
+  <div class="hero bg-gradient-to-r from-primary to-secondary text-primary-content py-16">
+    <div class="hero-content text-center">
+      <div class="max-w-4xl">
+        <h1 class="text-5xl font-bold mb-4">Nuestros Servicios de Spa</h1>
+        <p class="text-xl mb-8">Descubre una experiencia única de relajación y bienestar con nuestros tratamientos especializados</p>
+        
+        <!-- Search Bar -->
+        <div class="form-control w-full max-w-md mx-auto">
+          <div class="input-group">
+            <input 
+              type="text" 
+              placeholder="Buscar servicios..." 
+              class="input input-bordered w-full text-base-content"
+              [(ngModel)]="searchTerm"
+              (input)="onSearchChange(searchTerm)">
+            <button class="btn btn-square">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 py-8">
+    <!-- Filter Section -->
+    <div class="mb-8">
+      <div class="card bg-base-100 shadow-lg">
+        <div class="card-body">
+          <h2 class="card-title mb-4">Filtrar Servicios</h2>
+          <div class="flex flex-wrap gap-4 items-center">
+            <!-- Category Filter -->
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">Categoría</span>
+              </label>
+              <select 
+                class="select select-bordered w-full max-w-xs" 
+                [(ngModel)]="selectedCategory"
+                (change)="onCategoryChange(selectedCategory)">
+                <option value="">Todas las categorías</option>
+                <option value="masajes">Masajes</option>
+                <option value="faciales">Tratamientos Faciales</option>
+                <option value="corporales">Tratamientos Corporales</option>
+                <option value="relajacion">Relajación</option>
+              </select>
+            </div>
+            
+            <!-- Clear Filters Button -->
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">&nbsp;</span>
+              </label>
+              <button class="btn btn-outline" (click)="clearFilters()">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+                Limpiar Filtros
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex justify-center items-center py-12">
+      <div class="loading loading-spinner loading-lg text-primary"></div>
+    </div>
+
+    <!-- Services Grid -->
+    <div *ngIf="!loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div *ngFor="let service of filteredServices" class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
+        <!-- Service Image -->
+        <figure class="relative">
+          <img 
+            [src]="service.images[0] || '/assets/images/placeholder-service.jpg'" 
+            [alt]="service.name"
+            class="w-full h-48 object-cover">
+          
+          <!-- Popular Badge -->
+          <div *ngIf="service.isPopular" class="badge badge-secondary absolute top-3 left-3">
+            ⭐ Popular
+          </div>
+          
+          <!-- New Badge -->
+          <div *ngIf="service.isNew" class="badge badge-accent absolute top-3 right-3">
+            🆕 Nuevo
+          </div>
+        </figure>
+
+        <div class="card-body">
+          <!-- Service Header -->
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="card-title text-lg">{{ service.name }}</h3>
+            <div class="flex items-center gap-1 text-sm">
+              <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+              </svg>
+              <span>{{ service.rating }}</span>
+              <span class="text-base-content/60">({{ service.reviewCount }})</span>
+            </div>
+          </div>
+
+          <!-- Service Description -->
+          <p class="text-sm text-base-content/80 mb-3">{{ service.shortDescription }}</p>
+
+          <!-- Service Details -->
+          <div class="flex flex-wrap gap-2 mb-4">
+            <div class="badge badge-outline">
+              <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              {{ service.duration }} min
+            </div>
+            <div class="badge badge-outline">
+              <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+              Máx. {{ service.maxGuests }} {{ service.maxGuests === 1 ? 'persona' : 'personas' }}
+            </div>
+          </div>
+
+          <!-- Benefits -->
+          <div class="mb-4">
+            <h4 class="font-semibold text-sm mb-2">Beneficios:</h4>
+            <div class="flex flex-wrap gap-1">
+              <span *ngFor="let benefit of service.benefits.slice(0, 2)" class="badge badge-ghost badge-sm">
+                {{ benefit }}
+              </span>
+              <span *ngIf="service.benefits.length > 2" class="badge badge-ghost badge-sm">
+                +{{ service.benefits.length - 2 }} más
+              </span>
+            </div>
+          </div>
+
+          <!-- Price and Action -->
+          <div class="card-actions justify-between items-center">
+            <div class="price-section">
+              <span *ngIf="service.discountPrice" class="text-sm line-through text-base-content/60">
+                ${{ service.price.toLocaleString() }}
+              </span>
+              <span class="text-lg font-bold text-primary">
+                ${{ (service.discountPrice || service.price).toLocaleString() }}
+              </span>
+            </div>
+            
+            <button class="btn btn-primary btn-sm" (click)="bookService(service)">
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              Reservar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Results -->
+    <div *ngIf="!loading && filteredServices.length === 0" class="text-center py-12">
+      <div class="max-w-md mx-auto">
+        <svg class="w-16 h-16 mx-auto text-base-content/40 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.172a8 8 0 11-8-8M12 8v4m0 4h.01"></path>
+        </svg>
+        <h3 class="text-xl font-semibold mb-2">No se encontraron servicios</h3>
+        <p class="text-base-content/60 mb-4">
+          Intenta ajustar tus filtros o buscar con otros términos.
+        </p>
+        <button class="btn btn-primary" (click)="clearFilters()">
+          Ver todos los servicios
+        </button>
+      </div>
+    </div>
+
+    <!-- Call to Action Section -->
+    <div class="mt-16">
+      <div class="card bg-gradient-to-r from-primary to-secondary text-primary-content">
+        <div class="card-body text-center">
+          <h2 class="card-title justify-center text-2xl mb-4">¿Necesitas ayuda para elegir?</h2>
+          <p class="mb-6">Nuestros expertos están aquí para ayudarte a encontrar el tratamiento perfecto para ti.</p>
+          <div class="card-actions justify-center">
+            <button class="btn btn-accent">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+              </svg>
+              Contactar Asesor
+            </button>
+            <button class="btn btn-outline btn-accent">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+              </svg>
+              Chat en Vivo
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

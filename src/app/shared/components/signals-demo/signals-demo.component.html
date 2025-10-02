@@ -1,0 +1,239 @@
+<div class="signals-demo bg-base-100 rounded-lg shadow-lg p-6">
+  <div class="mb-6">
+    <h2 class="text-2xl font-bold text-primary mb-2">🚀 Angular Signals Demo</h2>
+    <p class="text-gray-600 text-center">Demostración interactiva de Angular Signals con reactividad en tiempo real</p>
+  </div>
+
+  <!-- Counter Demo Section -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Counter Controls -->
+    <div class="card bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200">
+      <div class="card-body">
+        <h3 class="card-title text-blue-700 mb-4">
+          <span class="text-2xl">🔢</span>
+          Contador con Signals
+        </h3>
+        
+        <!-- Counter Display -->
+        <div class="text-center mb-6">
+          <div [class]="'text-6xl font-bold mb-2 ' + getCounterColorClass()">
+            {{ counter() }}
+          </div>
+          <div class="text-sm text-gray-600 mb-4">
+            {{ dynamicMessage() }}
+          </div>
+          
+          <!-- Progress Bar -->
+          <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+            <div class="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                 [style.width.%]="getProgressPercentage()"></div>
+          </div>
+        </div>
+
+        <!-- Counter Buttons -->
+        <div class="flex flex-wrap gap-2 justify-center">
+          <button class="btn btn-sm btn-primary" (click)="increment()">+1</button>
+          <button class="btn btn-sm btn-secondary" (click)="addFive()">+5</button>
+          <button class="btn btn-sm btn-warning" (click)="decrement()" [disabled]="counter() === 0">-1</button>
+          <button class="btn btn-sm btn-error" (click)="reset()" [disabled]="counter() === 0">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message Demo -->
+    <div class="card bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200">
+      <div class="card-body">
+        <h3 class="card-title text-green-700 mb-4">
+          <span class="text-2xl">💬</span>
+          Mensaje Reactivo
+        </h3>
+        
+        <div *ngIf="visible()" class="alert alert-info mb-4 transition-all duration-300">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>{{ message() }}</span>
+        </div>
+
+        <div class="form-control mb-4">
+          <label class="label">
+            <span class="label-text">Actualizar mensaje:</span>
+          </label>
+          <div class="join">
+            <input type="text" 
+                   class="input input-bordered join-item flex-1" 
+                   #messageInput
+                   placeholder="Escribe un nuevo mensaje...">
+            <button class="btn btn-primary join-item" 
+                    (click)="updateMessage(messageInput.value); messageInput.value = ''">
+              Actualizar
+            </button>
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <button class="btn btn-sm btn-outline" (click)="appendToMessage('👋')">+ Emoji</button>
+          <button class="btn btn-sm btn-outline" (click)="resetMessage()">Reset</button>
+          <button class="btn btn-sm btn-ghost" (click)="toggleVisibility()">
+            {{ visible() ? 'Ocultar' : 'Mostrar' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Service State Demo -->
+  <div class="card bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 mb-6">
+    <div class="card-body">
+      <h3 class="card-title text-purple-700 mb-4">
+        <span class="text-2xl">🏪</span>
+        Estado Global de Servicios (Signals)
+      </h3>
+
+      <!-- Service Stats -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="stat bg-white rounded-lg shadow-sm">
+          <div class="stat-value text-2xl text-primary">{{ serviceCount() }}</div>
+          <div class="stat-desc">Servicios Total</div>
+        </div>
+        <div class="stat bg-white rounded-lg shadow-sm">
+          <div class="stat-value text-2xl text-secondary">{{ filteredCount() }}</div>
+          <div class="stat-desc">Filtrados</div>
+        </div>
+        <div class="stat bg-white rounded-lg shadow-sm">
+          <div class="stat-value text-2xl text-accent">{{ favoritesCount() }}</div>
+          <div class="stat-desc">Favoritos</div>
+        </div>
+        <div class="stat bg-white rounded-lg shadow-sm">
+          <div class="stat-value text-lg" [class]="loading() ? 'text-warning' : 'text-success'">
+            {{ loading() ? 'Cargando...' : 'Listo' }}
+          </div>
+          <div class="stat-desc">Estado</div>
+        </div>
+      </div>
+
+      <!-- Search Statistics -->
+      <div *ngIf="searchStats().searchTerm" class="alert alert-info mb-4">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+        <div>
+          <strong>Búsqueda:</strong> "{{ searchStats().searchTerm }}"<br>
+          <span class="text-sm">
+            Mostrando {{ searchStats().filtered }} de {{ searchStats().total }} servicios 
+            ({{ searchStats().resultPercentage }}%)
+          </span>
+        </div>
+      </div>
+
+      <!-- Active Filters Indicator -->
+      <div *ngIf="hasActiveFilters()" class="badge badge-warning mb-4">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+        </svg>
+        Filtros Activos
+      </div>
+
+      <!-- Demo Controls -->
+      <div class="flex flex-wrap gap-2 mb-4">
+        <button class="btn btn-primary btn-sm" 
+                (click)="loadDemoData()" 
+                [disabled]="loading()">
+          <span *ngIf="loading()" class="loading loading-spinner loading-sm"></span>
+          {{ loading() ? 'Cargando...' : 'Cargar Datos Demo' }}
+        </button>
+        
+        <button class="btn btn-secondary btn-sm" 
+                (click)="toggleFavoriteDemo('demo-1')"
+                [disabled]="serviceCount() === 0">
+          Toggle Favorito #1
+        </button>
+        
+        <button class="btn btn-accent btn-sm" 
+                (click)="clearFiltersDemo()"
+                [disabled]="!hasActiveFilters()">
+          Limpiar Filtros
+        </button>
+      </div>
+
+      <!-- Search Demo -->
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">Búsqueda en tiempo real (con signals):</span>
+        </label>
+        <div class="join">
+          <input type="text" 
+                 class="input input-bordered join-item flex-1" 
+                 #searchInput
+                 placeholder="Buscar servicios..."
+                 (input)="searchDemo(searchInput.value)">
+          <button class="btn btn-outline join-item" 
+                  (click)="searchDemo(''); searchInput.value = ''">
+            Limpiar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Real-time Updates Section -->
+  <div class="card bg-gradient-to-br from-yellow-50 to-orange-50 border border-yellow-200">
+    <div class="card-body">
+      <h3 class="card-title text-orange-700 mb-4">
+        <span class="text-2xl">⚡</span>
+        Actualizaciones en Tiempo Real
+      </h3>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Computed Values Display -->
+        <div>
+          <h4 class="font-semibold mb-2">Valores Computados:</h4>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span>Contador × 2:</span>
+              <span class="font-mono">{{ doubledCounter() }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Estado del contador:</span>
+              <span class="badge badge-sm" [class]="'badge-' + counterStatus()">
+                {{ counterStatus() }}
+              </span>
+            </div>
+            <div class="flex justify-between">
+              <span>Progreso:</span>
+              <span class="font-mono">{{ getProgressPercentage() | number:'1.0-1' }}%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Service State Display -->
+        <div>
+          <h4 class="font-semibold mb-2">Estado del Servicio:</h4>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span>Servicios disponibles:</span>
+              <span class="font-mono">{{ serviceCount() > 0 ? '✅' : '❌' }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Búsqueda activa:</span>
+              <span class="font-mono">{{ searchStats().searchTerm ? '🔍' : '⭕' }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Hay favoritos:</span>
+              <span class="font-mono">{{ favoritesCount() > 0 ? '❤️' : '🤍' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="text-center text-sm text-gray-600">
+        <p>
+          💡 <strong>Tip:</strong> Todos estos valores se actualizan automáticamente gracias a Angular Signals.
+          No necesitas suscripciones manuales ni gestión compleja de estado.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

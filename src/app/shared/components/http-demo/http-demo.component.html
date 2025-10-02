@@ -1,0 +1,284 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">HTTP Interceptors Demo</h1>
+      <p class="text-gray-600 text-center">Test loading, error handling, and authentication interceptors</p>
+      
+      <!-- Loading indicator -->
+      <div *ngIf="isLoading$ | async" class="mt-4">
+        <div class="flex items-center space-x-2 text-blue-600">
+          <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+          <span>Loading...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Control buttons -->
+    <div class="mb-8 flex flex-wrap gap-4">
+      <button 
+        (click)="clearResults()" 
+        class="btn btn-outline btn-sm">
+        Clear Results
+      </button>
+      <button 
+        (click)="clearNotifications()" 
+        class="btn btn-outline btn-sm">
+        Clear Notifications
+      </button>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Left Column: Demo Controls -->
+      <div class="space-y-6">
+        
+        <!-- Basic API Calls -->
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title text-lg">Basic API Calls</h2>
+            <div class="space-y-2">
+              <button 
+                (click)="loadServices()" 
+                class="btn btn-primary btn-sm w-full">
+                Load Services
+              </button>
+              <button 
+                (click)="getServiceById('1')" 
+                class="btn btn-secondary btn-sm w-full">
+                Get Service by ID (1)
+              </button>
+              <button 
+                (click)="getServiceById('999')" 
+                class="btn btn-secondary btn-sm w-full">
+                Get Non-existent Service (999)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Performance Tests -->
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title text-lg">Performance Tests</h2>
+            <div class="space-y-2">
+              <button 
+                (click)="triggerSlowRequest()" 
+                class="btn btn-warning btn-sm w-full">
+                Slow Request (3s) - Performance Warning
+              </button>
+              <button 
+                (click)="getNotificationData()" 
+                class="btn btn-info btn-sm w-full">
+                Skip Loading Request
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error Scenarios -->
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title text-lg">Error Scenarios</h2>
+            <div class="space-y-2">
+              <button 
+                (click)="triggerNetworkError()" 
+                class="btn btn-error btn-sm w-full">
+                Network Error (0)
+              </button>
+              <button 
+                (click)="trigger401Error()" 
+                class="btn btn-error btn-sm w-full">
+                Unauthorized (401)
+              </button>
+              <button 
+                (click)="trigger404Error()" 
+                class="btn btn-error btn-sm w-full">
+                Not Found (404)
+              </button>
+              <button 
+                (click)="trigger500Error()" 
+                class="btn btn-error btn-sm w-full">
+                Server Error (500) - With Retry
+              </button>
+              <button 
+                (click)="triggerValidationError()" 
+                class="btn btn-error btn-sm w-full">
+                Validation Error (422)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CRUD Operations -->
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title text-lg">CRUD Operations</h2>
+            <div class="space-y-2">
+              <button 
+                (click)="createService()" 
+                class="btn btn-success btn-sm w-full">
+                Create Service (POST)
+              </button>
+              <button 
+                (click)="updateService()" 
+                class="btn btn-success btn-sm w-full"
+                [disabled]="!selectedService">
+                Update Selected Service (PUT)
+              </button>
+              <button 
+                (click)="deleteService()" 
+                class="btn btn-success btn-sm w-full"
+                [disabled]="!selectedService">
+                Delete Selected Service (DELETE)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Authentication Tests -->
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title text-lg">Authentication Tests</h2>
+            <div class="space-y-2">
+              <button 
+                (click)="getProtectedData()" 
+                class="btn btn-accent btn-sm w-full">
+                Protected Request (with Auth Headers)
+              </button>
+              <button 
+                (click)="getRealPosts()" 
+                class="btn btn-accent btn-sm w-full">
+                Real External API Call
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Results -->
+      <div class="space-y-6">
+        
+        <!-- Selected Service -->
+        <div *ngIf="selectedService" class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h3 class="card-title text-lg">Selected Service</h3>
+            <div class="bg-gray-50 p-4 rounded-lg">
+              <h4 class="font-semibold">{{ selectedService.name }}</h4>
+              <p class="text-sm text-gray-600">{{ selectedService.description }}</p>
+              <div class="mt-2 flex justify-between text-sm">
+                <span>Price: ${{ selectedService.price }}</span>
+                <span>Category: {{ selectedService.category }}</span>
+              </div>
+              <div class="mt-2 flex justify-between text-sm">
+                <span>Rating: {{ selectedService.rating }}/5</span>
+                <span class="badge" [class]="selectedService.availability ? 'badge-success' : 'badge-error'">
+                  {{ selectedService.availability ? 'Available' : 'Unavailable' }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Last Response -->
+        <div *ngIf="lastResponse" class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h3 class="card-title text-lg">Last API Response</h3>
+            <div class="bg-gray-50 p-4 rounded-lg">
+              <pre class="text-xs overflow-x-auto">{{ lastResponse | json }}</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Demo Results -->
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h3 class="card-title text-lg">Demo Results ({{ demoResults.length }})</h3>
+            <div class="max-h-96 overflow-y-auto space-y-2">
+              <div *ngFor="let result of demoResults; trackBy: trackByIndex" 
+                   class="p-3 rounded-lg border-l-4" 
+                   [class]="result.success ? 'bg-green-50 border-green-400' : 'bg-red-50 border-red-400'">
+                
+                <div class="flex items-center justify-between">
+                  <span class="font-medium text-sm">{{ result.action }}</span>
+                  <span class="text-xs" 
+                        [class]="result.success ? 'text-green-600' : 'text-red-600'">
+                    {{ result.success ? 'SUCCESS' : 'ERROR' }}
+                  </span>
+                </div>
+                
+                <div *ngIf="result.data" class="text-xs text-gray-600 mt-1">
+                  {{ result.data }}
+                </div>
+                
+                <div *ngIf="result.error" class="text-xs text-red-600 mt-1">
+                  {{ result.error }}
+                </div>
+              </div>
+              
+              <div *ngIf="demoResults.length === 0" class="text-center text-gray-500 py-8">
+                No results yet. Try some demo actions above.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Services List -->
+        <div *ngIf="services.length > 0" class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h3 class="card-title text-lg">Available Services ({{ services.length }})</h3>
+            <div class="space-y-2">
+              <div *ngFor="let service of services; trackBy: trackByServiceId" 
+                   class="p-3 rounded-lg border cursor-pointer hover:bg-gray-50 transition-colors"
+                   [class]="selectedService?.id === service.id ? 'border-blue-400 bg-blue-50' : 'border-gray-200'"
+                   (click)="selectedService = service">
+                
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h4 class="font-medium text-sm">{{ service.name }}</h4>
+                    <p class="text-xs text-gray-600">{{ service.description }}</p>
+                  </div>
+                  <span class="text-sm font-semibold">${{ service.price }}</span>
+                </div>
+                
+                <div class="mt-2 flex justify-between items-center text-xs">
+                  <span class="badge badge-outline badge-xs">{{ service.category }}</span>
+                  <div class="flex items-center space-x-2">
+                    <span>{{ service.rating }}/5</span>
+                    <span class="badge badge-xs" 
+                          [class]="service.availability ? 'badge-success' : 'badge-error'">
+                      {{ service.availability ? 'Available' : 'Unavailable' }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="mt-8 card bg-base-100 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title">How to Use This Demo</h2>
+        <div class="prose prose-sm max-w-none">
+          <ol>
+            <li><strong>Loading Interceptor:</strong> Watch the loading indicator when making requests. Notice how it doesn't show for "Skip Loading" requests.</li>
+            <li><strong>Error Interceptor:</strong> Try different error scenarios to see custom error handling and retry logic for 5xx errors.</li>
+            <li><strong>Auth Interceptor:</strong> Protected requests automatically include authentication headers when a user is logged in.</li>
+            <li><strong>Performance Monitoring:</strong> Slow requests (>2s) trigger performance warnings via toast notifications.</li>
+            <li><strong>CRUD Operations:</strong> POST/PUT/DELETE requests show success notifications and properly handle the loading state.</li>
+            <li><strong>Retry Logic:</strong> Network errors and 5xx errors are automatically retried up to 2 times with exponential backoff.</li>
+          </ol>
+          
+          <p class="mt-4 text-sm text-gray-600">
+            <strong>Note:</strong> This demo uses simulated API calls and real external API calls to demonstrate different interceptor behaviors.
+            Check the browser's Network tab to see the actual HTTP requests and headers being sent.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

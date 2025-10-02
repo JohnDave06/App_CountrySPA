@@ -1,0 +1,148 @@
+<div class="service-filter bg-base-100 rounded-lg shadow-lg p-2 sm:p-4 mb-4 sm:mb-6">
+  <!-- Filter Header -->
+  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 mb-3 sm:mb-4">
+    <div class="flex items-center gap-2 sm:gap-4">
+      <h3 class="text-base sm:text-lg font-semibold">Filtros</h3>
+      <div *ngIf="hasActiveFilters" class="badge badge-primary badge-sm sm:badge-md">Activos</div>
+    </div>
+    
+    <div class="flex gap-1 sm:gap-2">
+      <button class="btn btn-ghost btn-xs sm:btn-sm" (click)="clearFilters()" [disabled]="!hasActiveFilters">
+        <svg class="w-3 h-3 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+        <span class="hidden sm:inline">Limpiar</span>
+      </button>
+      
+      <button *ngIf="showAdvancedFilters" 
+              class="btn btn-ghost btn-xs sm:btn-sm" 
+              (click)="toggleFilters()">
+        <svg class="w-3 h-3 sm:w-4 sm:h-4 transition-transform" 
+             [class]="showFilters ? 'rotate-180' : ''"
+             viewBox="0 0 24 24" fill="currentColor">
+          <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+        </svg>
+        <span class="hidden sm:inline">{{ showFilters ? 'Ocultar' : 'Mostrar' }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="form-control mb-3 sm:mb-4">
+    <label class="label">
+      <span class="label-text text-sm sm:text-base">Buscar servicios</span>
+    </label>
+    <div class="input-group">
+      <span class="input-group-text">
+        <svg class="w-3 h-3 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+      </span>
+      <input type="text" 
+             class="input input-bordered input-sm sm:input-md flex-1 text-sm sm:text-base" 
+             placeholder="Masajes, tratamientos..."
+             [formControl]="searchControl">
+    </div>
+  </div>
+
+  <!-- Advanced Filters (Collapsible) -->
+  <div *ngIf="showFilters || !showAdvancedFilters" class="advanced-filters">
+    
+    <!-- Categories -->
+    <div class="form-control mb-3 sm:mb-4">
+      <label class="label">
+        <span class="label-text text-sm sm:text-base">Categoría</span>
+      </label>
+      <div class="flex flex-wrap gap-1 sm:gap-2">
+        <input type="radio" 
+               name="category" 
+               class="btn" 
+               aria-label="Todos"
+               [checked]="selectedCategory === 'all'"
+               (change)="onCategoryChange('all')">
+        <label class="btn btn-outline btn-xs sm:btn-sm" 
+               [class]="selectedCategory === 'all' ? 'btn-primary' : ''"
+               (click)="onCategoryChange('all')">
+          Todos
+        </label>
+        
+        <ng-container *ngFor="let category of categories">
+          <input type="radio" 
+                 name="category" 
+                 class="btn hidden" 
+                 [id]="'cat-' + category"
+                 [checked]="selectedCategory === category"
+                 (change)="onCategoryChange(category)">
+          <label class="btn btn-outline btn-xs sm:btn-sm" 
+                 [class]="selectedCategory === category ? 'btn-primary' : ''"
+                 [for]="'cat-' + category"
+                 (click)="onCategoryChange(category)">
+            {{ category }}
+          </label>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Price Range -->
+    <div class="form-control mb-3 sm:mb-4">
+      <label class="label">
+        <span class="label-text text-sm sm:text-base">Rango de precios</span>
+        <span class="label-text-alt text-xs sm:text-sm">{{ priceRangeFormatted.min }} - {{ priceRangeFormatted.max }}</span>
+      </label>
+      <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 items-center">
+        <div class="flex-1 w-full">
+          <input type="range" 
+                 class="range range-primary range-xs sm:range-sm w-full"
+                 [min]="priceRange.min"
+                 [max]="priceRange.max"
+                 [step]="10000"
+                 [(ngModel)]="currentPriceRange.min"
+                 (input)="onPriceRangeChange()">
+        </div>
+        <span class="text-xs sm:text-sm text-gray-500">a</span>
+        <div class="flex-1 w-full">
+          <input type="range" 
+                 class="range range-primary range-xs sm:range-sm w-full"
+                 [min]="priceRange.min"
+                 [max]="priceRange.max"
+                 [step]="10000"
+                 [(ngModel)]="currentPriceRange.max"
+                 (input)="onPriceRangeChange()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Sort Options -->
+    <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 items-start sm:items-center">
+      <!-- Sort By -->
+      <div class="form-control flex-1 w-full sm:w-auto">
+        <label class="label">
+          <span class="label-text text-sm sm:text-base">Ordenar por</span>
+        </label>
+        <select class="select select-bordered select-xs sm:select-sm w-full" 
+                [(ngModel)]="sortBy" 
+                (change)="onSortChange()">
+          <option value="name">Nombre</option>
+          <option value="price">Precio</option>
+          <option value="rating">Calificación</option>
+          <option value="duration">Duración</option>
+        </select>
+      </div>
+
+      <!-- Sort Order -->
+      <div class="form-control w-full sm:w-auto">
+        <label class="label">
+          <span class="label-text text-sm sm:text-base">Orden</span>
+        </label>
+        <button class="btn btn-outline btn-xs sm:btn-sm w-full sm:w-auto" (click)="onSortOrderToggle()">
+          <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1" 
+               [class]="sortOrder === 'desc' ? 'rotate-180' : ''"
+               viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7 14l5-5 5 5z"/>
+          </svg>
+          <span class="text-xs sm:text-sm">{{ sortOrder === 'asc' ? 'Ascendente' : 'Descendente' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

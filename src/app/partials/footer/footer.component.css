@@ -1,0 +1,15 @@
+.footer {
+  margin-top: auto;
+  border-top: 1px solid #e5e7eb;
+}
+
+.footer .link:hover {
+  color: hsl(var(--p));
+  text-decoration: underline;
+}
+
+.footer svg:hover {
+  color: hsl(var(--p));
+  transform: scale(1.1);
+  transition: all 0.2s ease;
+}

@@ -1,0 +1,54 @@
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.rating input {
+  pointer-events: none;
+}
+
+.card {
+  transform: translateY(0);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.card-actions {
+  margin-top: auto;
+}
+
+.btn-circle {
+  transition: all 0.2s ease;
+}
+
+.btn-circle:hover {
+  transform: scale(1.1);
+}
+
+.badge {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.text-primary {
+  color: #10b981;
+}
+
+.badge-success {
+  background-color: #10b981;
+  color: white;
+  border: none;
+}
+
+.badge-error {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+}
